@@ -29,7 +29,7 @@ def print_flow_info(info, src, dest, flow_num):
     print('-----------------------Average RTT------------------------')
     print('Empirical average RTT = {}s'.format(round(info[3], 5)))
     if info[2][1] > 0:
-        theoretical_throughput = round((math.sqrt(3/2) * 1460) / (info[3] * math.sqrt(info[2][1])), 4)
+        theoretical_throughput = round((math.sqrt(3/2) * 1460) / (info[3] * math.sqrt(info[2][1])), 4)/10**6
     else:
         theoretical_throughput = "INF"
     print('Theoretical throughput = {} MBps'.format(theoretical_throughput))
