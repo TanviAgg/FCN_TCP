@@ -3,4 +3,4 @@
 2. Execute:
 python3 analysis_pcap_tcp.py
 
-3. part a results get printed to console.
+3. part b results get printed to console.

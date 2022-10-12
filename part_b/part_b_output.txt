@@ -1,0 +1,37 @@
+--------------------
+Number of flows initiated =  3
+--------------------
+===============================================================
+Analysis for flow 1: between sender on port 43498 and receiver on port 80
+---------------------------------------------------------------
+-----------------------Congestion window sizes------------------------
+window sizes are:  [11584, 13032, 14480, 15928, 17376, 18824, 20272, 26064, 27512, 33304]
+growth rates:  [1.12, 1.11, 1.1, 1.09, 1.08, 1.08, 1.29, 1.06, 1.21]
+---------------------------------------------------------------
+-----------------------Retransmissions------------------------
+Retransmissions due to triple duplicate ACKs = 2
+Retransmissions due to timeout = 1 (Total retransmissions - Triple duplicate ACKs)
+===============================================================
+===============================================================
+Analysis for flow 2: between sender on port 43500 and receiver on port 80
+---------------------------------------------------------------
+-----------------------Congestion window sizes------------------------
+window sizes are:  [11584, 13032, 15928, 17376, 17376, 18824, 26064, 27512, 33304, 33304]
+growth rates:  [1.12, 1.22, 1.09, 1.0, 1.08, 1.38, 1.06, 1.21, 1.0]
+---------------------------------------------------------------
+-----------------------Retransmissions------------------------
+Retransmissions due to triple duplicate ACKs = 28
+Retransmissions due to timeout = 66 (Total retransmissions - Triple duplicate ACKs)
+===============================================================
+===============================================================
+Analysis for flow 3: between sender on port 43502 and receiver on port 80
+---------------------------------------------------------------
+-----------------------Congestion window sizes------------------------
+window sizes are:  [11584, 13032, 26064, 27512, 24616, 24616, 27512, 27512, 27512, 27512]
+growth rates:  [1.12, 2.0, 1.06, 0.89, 1.0, 1.12, 1.0, 1.0, 1.0]
+---------------------------------------------------------------
+-----------------------Retransmissions------------------------
+Retransmissions due to triple duplicate ACKs = 0
+Retransmissions due to timeout = 0 (Total retransmissions - Triple duplicate ACKs)
+===============================================================
+--------------------

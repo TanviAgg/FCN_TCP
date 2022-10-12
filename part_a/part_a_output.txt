@@ -1,0 +1,70 @@
+--------------------
+Number of flows initiated =  3
+--------------------
+===============================================================
+Analysis for flow 1: between sender on port 43498 and receiver on port 80
+---------------------------------------------------------------
+-----------------------Transaction info------------------------
+Transaction 1
+Sender: Sequence number = 705669103, ACK number = 1921750144, window size = 49152
+Receiver: Sequence number = 1921750144, ACK number = 705669127, window size = 49152
+Transaction 2
+Sender: Sequence number = 705669127, ACK number = 1921750144, window size = 49152
+Receiver: Sequence number = 1921750144, ACK number = 705669127, window size = 49152
+---------------------------------------------------------------
+-----------------------Throughput------------------------
+5.2514 MBps
+---------------------------------------------------------------
+-----------------------Loss rate------------------------
+Number of packets lost = 3
+Loss rate = 0.00043 (Number of packets lost/Total number of packets)
+---------------------------------------------------------------
+-----------------------Average RTT------------------------
+Empirical average RTT = 0.07314s
+Theoretical throughput = 1.1786640699 MBps
+===============================================================
+===============================================================
+Analysis for flow 2: between sender on port 43500 and receiver on port 80
+---------------------------------------------------------------
+-----------------------Transaction info------------------------
+Transaction 1
+Sender: Sequence number = 3636173852, ACK number = 2335809728, window size = 49152
+Receiver: Sequence number = 2335809728, ACK number = 3636173876, window size = 49152
+Transaction 2
+Sender: Sequence number = 3636173876, ACK number = 2335809728, window size = 49152
+Receiver: Sequence number = 2335809728, ACK number = 3636173876, window size = 49152
+---------------------------------------------------------------
+-----------------------Throughput------------------------
+1.2854 MBps
+---------------------------------------------------------------
+-----------------------Loss rate------------------------
+Number of packets lost = 94
+Loss rate = 0.013481 (Number of packets lost/Total number of packets)
+---------------------------------------------------------------
+-----------------------Average RTT------------------------
+Empirical average RTT = 0.07284s
+Theoretical throughput = 0.2114241678 MBps
+===============================================================
+===============================================================
+Analysis for flow 3: between sender on port 43502 and receiver on port 80
+---------------------------------------------------------------
+-----------------------Transaction info------------------------
+Transaction 1
+Sender: Sequence number = 2558634630, ACK number = 3429921723, window size = 49152
+Receiver: Sequence number = 3429921723, ACK number = 2558634654, window size = 49152
+Transaction 2
+Sender: Sequence number = 2558634654, ACK number = 3429921723, window size = 49152
+Receiver: Sequence number = 3429921723, ACK number = 2558634654, window size = 49152
+---------------------------------------------------------------
+-----------------------Throughput------------------------
+1.4815 MBps
+---------------------------------------------------------------
+-----------------------Loss rate------------------------
+Number of packets lost = 0
+Loss rate = 0.0 (Number of packets lost/Total number of packets)
+---------------------------------------------------------------
+-----------------------Average RTT------------------------
+Empirical average RTT = 0.07222s
+Theoretical throughput = INF MBps
+===============================================================
+--------------------
