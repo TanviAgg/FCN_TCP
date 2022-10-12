@@ -1,6 +1,47 @@
+import math
+
 import dpkt
 import struct
 import sys
+
+
+def print_flow_info(info, src, dest, flow_num):
+    print('===============================================================')
+    print('Analysis for flow {}: between sender on port {} and receiver on port {}'.format(flow_num, src, dest))
+    print('---------------------------------------------------------------')
+    print('-----------------------Transaction info------------------------')
+    for i in range(2):
+        print('Transaction {}'.format(i+1))
+        print('Sender: Sequence number = {}, ACK number = {}, window size = {}'.format(info[0][i][0][0],
+                                                                                       info[0][i][0][1],
+                                                                                       info[0][i][0][2]))
+        print('Receiver: Sequence number = {}, ACK number = {}, window size = {}'.format(info[0][i][1][0],
+                                                                                       info[0][i][1][1],
+                                                                                       info[0][i][1][2]))
+    print('---------------------------------------------------------------')
+    print('-----------------------Throughput------------------------')
+    print('{} MBps'.format(round(info[1]/10**6, 4)))
+    print('---------------------------------------------------------------')
+    print('-----------------------Loss rate------------------------')
+    print('Number of packets lost = {}'.format(info[2][0]))
+    print('Loss rate = {} (Number of packets lost/Total number of packets)'.format(round(info[2][1], 6)))
+    print('---------------------------------------------------------------')
+    print('-----------------------Average RTT------------------------')
+    print('Empirical average RTT = {}s'.format(round(info[3], 5)))
+    if info[2][1] > 0:
+        theoretical_throughput = round((math.sqrt(3/2) * 1460) / (info[3] * math.sqrt(info[2][1])), 4)
+    else:
+        theoretical_throughput = "INF"
+    print('Theoretical throughput = {} MBps'.format(theoretical_throughput))
+    print('---------------------------------------------------------------')
+    print('-----------------------Congestion window sizes------------------------')
+    print('window sizes are: ', info[4][0])
+    print('growth rates: ', info[4][1])
+    print('---------------------------------------------------------------')
+    print('-----------------------Retransmissions------------------------')
+    print('Retransmissions due to triple duplicate ACKs = {}'.format(info[5][0]))
+    print('Retransmissions due to timeout = {} (Total retransmissions - Triple duplicate ACKs)'.format(info[5][1]))
+    print('===============================================================')
 
 
 class TCPPacket:
@@ -138,12 +179,12 @@ class Analyser:
         return flow_packets_sender, flow_packets_receiver, all_flow_packets
 
     def get_flow_info(self, src_port, dest_port, n=2):
-        sent, received, _ = self.get_all_flow_packets(src_port, dest_port)
+        sent, received, all = self.get_all_flow_packets(src_port, dest_port)
         transaction_info = self.get_transaction_info(sent, received, n)
         throughput = self.compute_throughput(sent)
         loss_rate = self.compute_loss(sent)
         avg_RTT = self.estimate_RTT(sent, received)
-        congestion_windows = self.compute_compression_window_sizes()
+        congestion_windows = self.compute_compression_window_sizes(all)
         retransmission_info = self.count_retransmissions(sent, received)
         return [transaction_info, throughput, loss_rate, avg_RTT, congestion_windows, retransmission_info]
 
@@ -216,8 +257,46 @@ class Analyser:
                 num_transactions += 1
         return sum_RTTs/num_transactions
 
-    def compute_compression_window_sizes(self):
-        return []
+    def compute_compression_window_sizes(self, packets):
+        """
+        Since congestion window is adjusted whenever we get an ACK (roughly every RTT),
+        we can count the number of bytes sent before an ACK is received.
+        1. We start counting after the 3 way handshake is complete.
+        2. We can ignore consecutive ACKs from the receiver since no data was sent in between.
+        We are interested in how much data is sent by the sender before the first ACK.
+        :param packets: all packets for the given flow
+        :return: first 10 congestion window sizes
+        """
+        cwnd = []
+        handshake_complete_sender = False
+        last_seq = 0
+        last_packet_ack = False
+        for packet in packets:
+            if packet.src_ip == self.sender and packet.dest_ip == self.receiver:
+                if packet.syn_flag:
+                    continue
+                elif packet.ack_flag and not handshake_complete_sender:
+                    handshake_complete_sender = True
+                    last_packet_ack = False
+                    continue
+                else:
+                    last_packet_ack = False
+                    last_seq = packet.seq_number
+            elif packet.src_ip == self.receiver and packet.dest_ip == self.sender:
+                if packet.syn_flag or last_packet_ack:
+                    continue
+                elif packet.ack_flag and handshake_complete_sender:
+                    last_packet_ack = True
+                    cwnd.append(last_seq-packet.ack_number)
+                    if len(cwnd) == 10:
+                        break
+                else:
+                    continue
+        growth_rate = []
+        n = min(10, len(cwnd))
+        for i in range(n-1):
+            growth_rate.append(round(cwnd[i+1]/cwnd[i], 2))
+        return cwnd, growth_rate
 
     def count_retransmissions(self, sent, received):
         sent_counts = {}
@@ -245,26 +324,16 @@ class Analyser:
 
 if __name__ == "__main__":
     # print(sys.byteorder)
-    # myTCPParser = MyTCPParser()
     f = open('assignment2.pcap', 'rb')
     pcap = dpkt.pcap.Reader(f)
-    # for ts, buf in pcap:
-    #     parsed_p = myTCPParser.parse_packet_bytes(buf)
-    #     eth = dpkt.ethernet.Ethernet(buf)
-    #     ip = eth.data
-    #     tcp = ip.data
-    #     print("ts")
     analyser = Analyser(sender='130.245.145.12', receiver='128.208.2.198')
     analyser.load_data(pcap_data=pcap)
     print('--------------------')
     flows = analyser.count_flows_initiated()
-    print(flows)
+    print('Number of flows initiated = ', len(flows))
     print('--------------------')
-    for flow in flows:
-        transactions = analyser.get_flow_info(flow[0], flow[1])
-        print(transactions)
-    print('--------------------')
-    print('--------------------')
-    print('--------------------')
+    for i in range(len(flows)):
+        transactions = analyser.get_flow_info(flows[i][0], flows[i][1])
+        print_flow_info(transactions, flows[i][0], flows[i][1], i+1)
     print('--------------------')
     f.close()
