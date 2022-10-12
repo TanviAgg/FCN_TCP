@@ -24,7 +24,7 @@ def print_http_info(flows, info):
 
 class TCPPacket:
     def __init__(self, src_port, dest_port, src_ip, dest_ip, seq_no, ack_no, window, header_len, payload,
-                 payload_size, syn_set, ack_set, fin_set, mss, scaling_factor, timestamp):
+                 payload_size, syn_set, ack_set, fin_set, mss, scaling_factor, timestamp, size):
         self.src_port = src_port
         self.dest_port = dest_port
         self.src_ip = src_ip
@@ -41,6 +41,7 @@ class TCPPacket:
         self.mss = mss
         self.scaling_factor = scaling_factor
         self.timestamp = timestamp
+        self.size = size
 
 
 class MyTCPParser:
@@ -97,7 +98,7 @@ class MyTCPParser:
             scaling_window = 2 ** struct.unpack(">B", packet_bytes[tcp_header_start+39:tcp_header_start+40])[0]
         parsed_packet = TCPPacket(src_port, dest_port, src_ip, dest_ip, seq_no, ack_no, window,
                                   header_len, payload, payload_size, syn_set, ack_set, fin_set, mss,
-                                  scaling_window, timestamp)
+                                  scaling_window, timestamp, len(packet_bytes))
         return parsed_packet
 
 
@@ -170,7 +171,7 @@ class Analyser:
         time_taken = self.parsed_packets[-1].timestamp - self.parsed_packets[0].timestamp
 
         for packet in self.parsed_packets:
-            total_size += packet.payload_size + 34 + packet.header_len
+            total_size += packet.size
         print("Time taken to load = {}s".format(round(time_taken, 5)))
         print("Total packets transferred = {}".format(total_packets))
         print("Total size of data transferred = {}".format(total_size))
@@ -234,11 +235,12 @@ if __name__ == "__main__":
     print('====================')
 
     print('Comparison of the three cases')
+    print('--------------------')
     print('Statistics for http_1080.pcap')
     print('--------------------')
     print('Number of flows initiated = ', len(flows))
     analyser.compute_statistics()
-
+    print('--------------------')
     print('Statistics for http_1081.pcap')
     print('--------------------')
     f = open('http_1081.pcap', 'rb')
@@ -249,7 +251,6 @@ if __name__ == "__main__":
     print('Number of flows initiated = ', len(flows))
     analyser.compute_statistics()
     print('--------------------')
-
     print('Statistics for http_1082.pcap')
     print('--------------------')
     f = open('http_1082.pcap', 'rb')
