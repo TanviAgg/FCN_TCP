@@ -124,7 +124,6 @@ class Analyser:
     def __init__(self, sender, receiver):
         self.sender = sender
         self.receiver = receiver
-        self.protocol = ""
         self.parser = MyTCPParser()
         self.parsed_packets = []
 
@@ -235,25 +234,33 @@ class Analyser:
             else:
                 retransmitted += 1
         retransmitted -= 1  # account for the PSH/ACK packet with same number
-        return retransmitted, retransmitted / len(unique_sent)
+        return retransmitted, retransmitted / len(packets)
 
     def estimate_RTT(self, sent, received):
         sent_timestamps = {}
         received_timestamps = {}
         retransmitted_seq_numbers = set([])
+        repeated_seq_numbers_receiver = set([])
         for packet in sent:
             if packet.seq_number in sent_timestamps:
                 retransmitted_seq_numbers.add(packet.seq_number)
+                sent_timestamps[packet.seq_number] = (packet.timestamp, packet.payload_size)
             else:
-                sent_timestamps[packet.seq_number] = packet.timestamp
+                sent_timestamps[packet.seq_number] = (packet.timestamp, packet.payload_size)
         for packet in received:
-            received_timestamps[packet.ack_number] = packet.timestamp
+            if packet.ack_number in received_timestamps:
+                repeated_seq_numbers_receiver.add(packet.ack_number)
+            else:
+                received_timestamps[packet.ack_number] = packet.timestamp
 
         sum_RTTs = 0
         num_transactions = 0
-        for seq_number, ts in sent_timestamps.items():
-            if seq_number not in retransmitted_seq_numbers and seq_number in received_timestamps:
-                sum_RTTs += (received_timestamps[seq_number] - ts)
+        for seq_number, (ts, payload_size) in sent_timestamps.items():
+            expected_ack_number = seq_number + payload_size
+            if seq_number not in retransmitted_seq_numbers \
+                    and expected_ack_number not in repeated_seq_numbers_receiver \
+                    and expected_ack_number in received_timestamps:
+                sum_RTTs += (received_timestamps[expected_ack_number] - ts)
                 num_transactions += 1
         return sum_RTTs/num_transactions
 

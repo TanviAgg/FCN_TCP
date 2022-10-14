@@ -20,8 +20,8 @@ Number of packets lost = 3
 Loss rate = 0.00043 (Number of packets lost/Total number of packets)
 ---------------------------------------------------------------
 -----------------------Average RTT------------------------
-Empirical average RTT = 0.07314s
-Theoretical throughput = 1.1786640699 MBps
+Empirical average RTT = 0.07352s
+Theoretical throughput = 1.172966971 MBps
 ===============================================================
 ===============================================================
 Analysis for flow 2: between sender on port 43500 and receiver on port 80
@@ -39,11 +39,11 @@ Receiver: Sequence number = 2335809728, ACK number = 3636173876, window size = 4
 ---------------------------------------------------------------
 -----------------------Loss rate------------------------
 Number of packets lost = 94
-Loss rate = 0.013481 (Number of packets lost/Total number of packets)
+Loss rate = 0.013299 (Number of packets lost/Total number of packets)
 ---------------------------------------------------------------
 -----------------------Average RTT------------------------
-Empirical average RTT = 0.07284s
-Theoretical throughput = 0.2114241678 MBps
+Empirical average RTT = 0.07388s
+Theoretical throughput = 0.2098606764 MBps
 ===============================================================
 ===============================================================
 Analysis for flow 3: between sender on port 43502 and receiver on port 80
@@ -64,7 +64,7 @@ Number of packets lost = 0
 Loss rate = 0.0 (Number of packets lost/Total number of packets)
 ---------------------------------------------------------------
 -----------------------Average RTT------------------------
-Empirical average RTT = 0.07222s
+Empirical average RTT = 0.07311s
 Theoretical throughput = INF MBps
 ===============================================================
 --------------------
