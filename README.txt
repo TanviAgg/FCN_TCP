@@ -15,7 +15,8 @@ Aggarwal-Tanvi-HW2.zip
         |__http_1080.pcap              (generated pcap file)
         |__http_1081.pcap              (generated pcap file)
         |__http_1082.pcap              (generated pcap file)
-        |__part_c_output.txt
+        |__part_c1_output.txt
+        |__part_c23_output.txt
         |__README.txt
     |__part_d
         |__README.txt

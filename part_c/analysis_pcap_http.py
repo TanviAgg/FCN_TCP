@@ -6,7 +6,7 @@ import sys
 
 def print_http_info(flows, info):
     n_flows = len(flows)
-    with open('part_c_output.txt', 'w') as f:
+    with open('part_c1_output.txt', 'w') as f:
         for flow_num in range(n_flows):
             f.write("HTTP information for connection {} from source port {} to destination port {}\n".format(
                 flow_num+1, flows[flow_num][0], flows[flow_num][1]))
@@ -231,7 +231,7 @@ if __name__ == "__main__":
         info = analyser.get_flow_http_info(flows[i][0], flows[i][1])
         all_flow_info.append(info)
     print_http_info(flows, all_flow_info)
-    print('Reconstructed HTTP request/response from http_1080.pcap into part_c_output.txt. Check the file for details.')
+    print('Reconstructed HTTP request/response from http_1080.pcap into part_c1_output.txt. Check the file for details.')
     print('====================')
 
     print('Comparison of the three cases')

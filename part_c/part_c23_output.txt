@@ -1,0 +1,23 @@
+Comparison of the three cases
+--------------------
+Statistics for http_1080.pcap
+--------------------
+Number of flows initiated =  17
+Time taken to load = 0.39524s
+Total packets transferred = 1854
+Total size of data transferred = 2296576
+--------------------
+Statistics for http_1081.pcap
+--------------------
+Number of flows initiated =  6
+Time taken to load = 5.29041s
+Total packets transferred = 1762
+Total size of data transferred = 2280976
+--------------------
+Statistics for http_1082.pcap
+--------------------
+Number of flows initiated =  1
+Time taken to load = 5.34571s
+Total packets transferred = 1613
+Total size of data transferred = 2282850
+--------------------
